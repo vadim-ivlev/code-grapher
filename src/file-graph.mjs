@@ -23,9 +23,9 @@ function buildGraphData() {
     var data = {nodes:[], links: []}
     for (let f of files.keys()) {
         let node = {
+            labels: [ path.extname(f)] ,
             identity: f,
             basename: path.basename(f),
-            ext: path.extname(f),
         }
         data.nodes.push(node)
         let linkedFiles = files.get(f)
