@@ -1,6 +1,8 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import {walkDir} from './walker.mjs'
+import * as walker from './walker.mjs'
+import parseArgs from 'minimist'
+// import glob from 'glob'
 
 var files = new Map()
 
@@ -43,13 +45,16 @@ function buildGraphData() {
 
 
 function main(dir) {
-    if (!dir) {
-        console.log("Please specify root dir as the first param.")
+    var argv = parseArgs(process.argv.slice(2));
+    console.warn('argv=',argv)
+
+    if (argv._.length==0) {
+        console.warn("Please specify root dir as the first param.")
         return
     }
 
-    walkDir(dir, buildFileMap)
-    walkDir(dir, fillFileMap)
+    walker.walkDirs(argv._, buildFileMap, argv.i, argv.x)
+    walker.walkDirs(argv._, fillFileMap,  argv.i, argv.x)
 
     var data = buildGraphData(files)
     var dataStr = JSON.stringify(data, null, 2)
@@ -57,4 +62,17 @@ function main(dir) {
     
 }
 
-main(process.argv[2])
+main()
+
+// console.log('firstDir=',firstDir)
+// var options = {
+//     "ignore":['*node_modules/**']
+// }
+// glob("**", options, function (er, files) {
+//     // files is an array of filenames.
+//     // If the `nonull` option is set, and nothing
+//     // was found, then files is ["**/*.js"]
+//     // er is an error object or null.
+//     console.log("err=",er)
+//     console.log("files=",files)
+//   })
