@@ -1,8 +1,8 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-// walkDirs recursively walks subdirectories of dir and call callback for each file
-// filtering those that should be processed.
+// walkDirs recursively walks subdirectories of dir 
+// and executes callback for each file that should be processed.
 export function walkDir(dir, callback, includeReg, excludeReg) {
     // skip non directories
     if (!fs.statSync(dir).isDirectory()) return
