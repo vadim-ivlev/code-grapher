@@ -1,5 +1,6 @@
 import parseArgs from 'minimist'
 import * as filer from './filer.mjs'
+import * as funcs from './funcs.mjs'
 
 
 // graph.mjs 
@@ -36,7 +37,7 @@ function main(dir) {
     }
 
     var data = argv.f ? 
-        console.warn('not implemented') 
+        funcs.getGraphData(argv._, argv.i, argv.x) 
         : 
         filer.getGraphData(argv._, argv.i, argv.x)
 

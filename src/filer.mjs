@@ -11,7 +11,7 @@ function buildFileMap(filePath) {
 
 function fillFileMap(filePath) {
     const fileContents = fs.readFileSync(filePath, 'utf8')
-    for ( let f of files.keys()){
+    for ( let f of files.keys()) {
         const basename = path.basename(f)
         if (fileContents.includes(basename))
             files.get(filePath).push(f)

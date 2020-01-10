@@ -1,8 +1,15 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-// walkDirs recursively walks subdirectories of dir 
-// and executes callback for each file that should be processed.
+/**
+ * Recursively walks subdirectories of dir
+ * and executes callback for each file that should be processed.
+ * 
+ * @param dir 
+ * @param callback 
+ * @param includeReg 
+ * @param excludeReg 
+ */
 export function walkDir(dir, callback, includeReg, excludeReg) {
     // skip non directories
     if (!fs.statSync(dir).isDirectory()) return
@@ -27,7 +34,14 @@ export function walkDir(dir, callback, includeReg, excludeReg) {
     })
 }
 
-// walkDirs traverse list of directories
+
+/**
+ * traverse list of directories.
+ * @param dirs 
+ * @param callback function to call for each processable file
+ * @param includePattern reg expression pattern to include paths
+ * @param excludePattern reg expression pattern to exclude paths 
+ */
 export function walkDirs(dirs, callback, includePattern, excludePattern) {
     var includeReg = includePattern? new RegExp(includePattern) : null
     var excludeReg = excludePattern? new RegExp(excludePattern) : null
@@ -37,7 +51,12 @@ export function walkDirs(dirs, callback, includePattern, excludePattern) {
     }
 }
 
-// shoudBeProcessed checks if the file should be processed
+/**  
+ * Checks if the file should be processed
+ * @param f a path to check 
+ * @param includeReg reg expression to include paths. 
+ * @param excludeReg reg expression to exclude paths. 
+ */
 function shoudBeProcessed(f, includeReg, excludeReg) {
     if (!f) return false
     if ( includeReg && (!includeReg.test(f)) ) return false
