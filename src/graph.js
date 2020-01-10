@@ -1,6 +1,6 @@
 import parseArgs from 'minimist'
-import * as filer from './filer.mjs'
-import * as funcs from './funcs.mjs'
+import * as filer from './filer.js'
+import * as funcs from './funcs.js'
 
 
 // graph.mjs 
@@ -16,7 +16,7 @@ import * as funcs from './funcs.mjs'
 // -x 'regexp2'
 //      exclude paths that match regexp2
 //
-// -i precedes -x. In other words, first -i selects paths matching regexp1 from all possible subpaths, 
+// -i precedes -x. In other words, first -i selects paths matching regexp1 from all possible sub paths, 
 // and then -x excludes paths matching regexp2 from the rest.
 //
 // Example:

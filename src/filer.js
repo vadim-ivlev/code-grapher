@@ -1,6 +1,6 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import * as walker from './walker.mjs'
+import * as walker from './walker.js'
 
 var files = new Map()
 

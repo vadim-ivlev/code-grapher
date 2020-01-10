@@ -27,7 +27,7 @@ export function walkDir(dir, callback, includeReg, excludeReg) {
 
         } 
         // check if the file should be processed
-        else if (shoudBeProcessed(dirPath, includeReg, excludeReg)) {
+        else if (shouldBeProcessed(dirPath, includeReg, excludeReg)) {
             console.warn("filePath=", dirPath)
             callback(dirPath)
         }        
@@ -37,10 +37,12 @@ export function walkDir(dir, callback, includeReg, excludeReg) {
 
 /**
  * traverse list of directories.
+ * @name walkDirs
  * @param dirs 
  * @param callback function to call for each processable file
  * @param includePattern reg expression pattern to include paths
  * @param excludePattern reg expression pattern to exclude paths 
+ * @api public
  */
 export function walkDirs(dirs, callback, includePattern, excludePattern) {
     var includeReg = includePattern? new RegExp(includePattern) : null
@@ -57,7 +59,7 @@ export function walkDirs(dirs, callback, includePattern, excludePattern) {
  * @param includeReg reg expression to include paths. 
  * @param excludeReg reg expression to exclude paths. 
  */
-function shoudBeProcessed(f, includeReg, excludeReg) {
+function shouldBeProcessed(f, includeReg, excludeReg) {
     if (!f) return false
     if ( includeReg && (!includeReg.test(f)) ) return false
     if ( excludeReg && excludeReg.test(f) ) return false

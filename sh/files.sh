@@ -1,3 +1,3 @@
 #!/bin/bash
 
-node src/graph.mjs -i '(\.sh|\.mjs)$' -x 'node' . > ../neo4j-grapher/public/data/files.json
+node src/graph.js -i '(\.sh|\.mjs|\.js)$' -x 'node' . > ../neo4j-grapher/public/data/files.json

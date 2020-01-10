@@ -2,6 +2,7 @@
   "name": "code-grapher",
   "version": "1.0.0",
   "description": "build graph of function calls",
+  "type":"module",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
