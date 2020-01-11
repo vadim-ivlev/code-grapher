@@ -24,7 +24,7 @@ var funcDeclRegExp = /function\s+(\w+)\s*\(.*\)\s*\{/g
 /** 
  * Match function declarations 
  * */
-var funcCallRegExp = /(\w+)\s*\(.*\)\s*\{/g
+var funcCallRegExp = /(\w+)\s*\(/g
 
 
 /**
@@ -87,8 +87,37 @@ function buildFuncsMap(filePath) {
     }
 }
 
-function getListOfFunctions(funcBody) {
-    return ['f1','f2']
+
+function getListOfFunctions(funcDescriptor) {
+    let calledFunctions = []
+    for (let match of funcDescriptor.funcBody.matchAll(funcCallRegExp) ){
+        let funcName = match[1]
+
+        if (funcName=='buildGraphData')
+            console.warn('buildGraphData')
+
+        let descriptors = funcs.get(funcName)
+        if (!descriptors)  continue
+        if (descriptors.length == 1){
+            calledFunctions.push(descriptors[0].funcFullName)
+            continue
+        } else {
+            for (let descriptor of descriptors) {
+                if ( hasReferenceToFileName(funcDescriptor.filePath, descriptor.fileName))
+                    calledFunctions.push(descriptor.funcFullName)
+            }
+        }
+    }
+    return calledFunctions
+}
+
+function hasReferenceToFileName(filePath, fileName) {
+    //the same file
+    if (path.basename(filePath) == fileName) return true
+
+    const fileContent = removeComments(fs.readFileSync(filePath, 'utf8'))
+    // TODO: analyze imports instead or use regexp at least
+    return fileContent.includes(fileName)
 }
 
 
@@ -99,16 +128,16 @@ function buildGraphData() {
     // var descriptors = function* (){ for (let [funcName,funcDescriptors] of funcs.entries()) for (let d of funcDescriptors) yield d }
     // for (let f of descriptors()) {}
 
-    for (let [funcName,funcDescriptors] of funcs.entries()) for (let f of funcDescriptors) {
+    for (let [funcName,funcDescriptors] of funcs.entries()) for (let descr of funcDescriptors) {
 
         let node = {
-            name: f.funcName,
-            labels: [f.filePath],
-            identity: f.funcFullName,
-            descriptor: f,
+            name: descr.funcName,
+            labels: [descr.filePath],
+            identity: descr.funcFullName,
+            descriptor: descr,
         }
 
-        node.descriptor.funcCalls = getListOfFunctions(f.funcBody)
+        node.descriptor.funcCalls = getListOfFunctions(descr)
         data.nodes.push(node)
         
         for (let fun of node.descriptor.funcCalls) {
@@ -125,21 +154,33 @@ function buildGraphData() {
 }
 
 
-export function getGraphData(dirs, includePattern, excludePattern) {
+// some stat
+function printStat(funcs) {
+    // console.warn('funcs=',funcs)
+    console.warn('-'.repeat(55))
 
-    walker.walkDirs(dirs, buildFuncsMap, includePattern, excludePattern)
-    console.warn('funcs=',funcs)
-    
-    for (let v of funcs.values()){
-        console.warn(v.length)
+    var counter = 0
+    let files = new Set()
+    let functions = new Set()
+    for (let [funcName,descriptors] of funcs.entries()){
+        counter++
+        let s1 = `${counter}. Function ${funcName}`.padEnd(40)
+        let s2 = `defined ${descriptors.length} time` + (descriptors.length>1 ? 's':'')
+        console.warn(s1 + s2)
+        for (let d of descriptors) {
+            files.add(d.filePath)
+            functions.add(d.funcFullName)
+        }
     }
-    console.warn(
-        [...funcs.values()].reduce( (s,v) => s+=v.length, 0)
-    )
-    
+    console.warn('-'.repeat(55))
+    console.warn(`Total ${functions.size} functions defined in ${files.size} files.`)
+    // console.warn( [...funcs.values()].reduce( (s,v) => s+=v.length, 0)  )
+}
 
-    // walker.walkDirs(dirs, fillFuncsMap, includePattern, excludePattern)
 
+export function getGraphData(dirs, includePattern, excludePattern) {
+    walker.walkDirs(dirs, buildFuncsMap, includePattern, excludePattern)
+    printStat(funcs)
     var data = buildGraphData(funcs)
     return data
 }

@@ -28,7 +28,7 @@ export function walkDir(dir, callback, includeReg, excludeReg) {
         } 
         // check if the file should be processed
         else if (shouldBeProcessed(dirPath, includeReg, excludeReg)) {
-            console.warn("filePath=", dirPath)
+            console.warn("Analyzing ", dirPath)
             callback(dirPath)
         }        
     })

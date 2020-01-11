@@ -11,9 +11,9 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/src/file-graph.mjs",
+            "program": "${workspaceFolder}/src/graph.js",
             "cwd": "${workspaceFolder}",
-            "args": ["-i","js", "-x", "(node|dir1)" , "."]
+            "args": ["-f", "-i", "(\\.sh|\\.mjs|\\.js)$", "-x", "(node)" , "."]
         }
     ]
 }
